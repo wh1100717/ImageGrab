@@ -2,15 +2,14 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package imagegrab;
+package com.imageGrab;
 
+import com.imageGrab.utils.FileUtil;
 import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
-import jonelo.jacksum.JacksumAPI;
-import jonelo.jacksum.algorithm.AbstractChecksum;
 
 /**
  *
@@ -43,27 +42,18 @@ public class ImageGrab {
             File[] files = subDirectory.listFiles();
             for (int indexF = 0; indexF < files.length; indexF++) {
                 File file = files[indexF];
-                AbstractChecksum jacksum = JacksumAPI.getChecksumInstance("md5", true);
-                String md5Hash = String.valueOf(jacksum.readFile(file.getAbsolutePath()));
+                String md5Hash = String.valueOf(FileUtil.calculateCheckSum(file));
                 if (checkSumMap.get(md5Hash) == null) {
                     count++;
                     System.out.println(md5Hash + "count : " + count);
                     checkSumMap.put(md5Hash, 1);
                 } else {
                     System.out.println("重复图片，移至" + path + "_temp");
-                    Move(file, desPath);
+                    FileUtil.move(file, desPath);
                 }
             }
         }
     }
 
-    public static boolean Move(File srcFile, String destPath) {
-        // Destination directory
-        File dir = new File(destPath);
 
-        // Move file to new directory
-        boolean success = srcFile.renameTo(new File(dir, srcFile.getName()));
-
-        return success;
-    }
 }
