@@ -4,7 +4,12 @@
  */
 package com.imageGrab;
 
+import com.imageGrab.grab.ChunTuGrab;
+import com.imageGrab.grab.DuiTangGrab;
+import com.imageGrab.grab.S91MeiTuGrab;
+import com.imageGrab.grab.WoXiHuanGrab;
 import com.imageGrab.utils.FileUtil;
+import com.imageGrab.utils.JsonUtil;
 import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -24,8 +29,9 @@ public class ImageGrab {
      */
     public static void main(String[] args) throws NoSuchAlgorithmException, IOException {
         // TODO code application logic here
-        getFileCheckSum("F:/360云盘/图片/分类");
-        getFileCheckSum("F:/360云盘/图片/待处理");
+//        getFileCheckSum("F:/360云盘/图片/分类");
+//        getFileCheckSum("F:/360云盘/图片/待处理");
+        S91MeiTuGrab.grabPhoto(2);
     }
 
     public static void getFileCheckSum(String path) throws NoSuchAlgorithmException, IOException {
