@@ -31,14 +31,12 @@ public class WoXiHuanGrab {
         Matcher contentMatch = contentPattern.matcher(body);
         int counter = 1;
         while (photoMatch.find()) {
-            String imgUrl = photoMatch.group();
+            String imgUrl = photoMatch.group(1);
             String msg = "";
             if (contentMatch.find()) {
-                msg = contentMatch.group();
+                msg = contentMatch.group(1);
             }
-            imgUrl = imgUrl.substring(0, imgUrl.length() - 1);
-            imgUrl = imgUrl.replaceAll("src='", "").replace("196_", "680_");
-            msg = msg.replaceAll("cellTit\">", "").replaceAll("</span>", "");
+            imgUrl = imgUrl.replace("196_", "680_");
             System.out.println("第" + counter + "张：" + msg);
             System.out.println(imgUrl);
             counter++;

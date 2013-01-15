@@ -16,6 +16,8 @@ public class RegexUtil {
     public static final String s91MeiTuRegex = "(filename\":\"[^,]*.(gif|jpg))";
     public static final String huaBanRegex = "(key\":\"[^\"]*)";
     public static final String renRenRegex = "(key\":\"[^\"]*)";
-    public static final String chunTuPhotoRegex = "data-original=\"([^\"]*)\"";
-    public static final String chunTuContentRegex = "title=\"([^\"]*)\"";
+    public static final String chunTuMeiziRegex = "data-original=\"([^\"]*)\"";
+    public static final String chunTuMeinvRegex = "<img src=\"([^\"]*)\"";
+    public static final String chunTuTaotuRegex = "<h3 class=\"feed-title\"><a target=\"_blank\" href=\"([^\"]*)\"";
+    public static final String chunTuContentRegex = "alt=\"([^\"]*)\"";
 }

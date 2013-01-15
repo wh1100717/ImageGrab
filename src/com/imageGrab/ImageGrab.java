@@ -31,7 +31,7 @@ public class ImageGrab {
         // TODO code application logic here
 //        getFileCheckSum("F:/360云盘/图片/分类");
 //        getFileCheckSum("F:/360云盘/图片/待处理");
-        S91MeiTuGrab.grabPhoto(2);
+        ChunTuGrab.grabTuwenPhoto(1);
     }
 
     public static void getFileCheckSum(String path) throws NoSuchAlgorithmException, IOException {
