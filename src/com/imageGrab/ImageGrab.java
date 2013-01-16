@@ -4,8 +4,10 @@
  */
 package com.imageGrab;
 
+import com.imageGrab.common.Const;
 import com.imageGrab.grab.ChunTuGrab;
 import com.imageGrab.grab.DuiTangGrab;
+import com.imageGrab.grab.HuabanGrab;
 import com.imageGrab.grab.S91MeiTuGrab;
 import com.imageGrab.grab.WoXiHuanGrab;
 import com.imageGrab.utils.FileUtil;
@@ -31,7 +33,7 @@ public class ImageGrab {
         // TODO code application logic here
 //        getFileCheckSum("F:/360云盘/图片/分类");
 //        getFileCheckSum("F:/360云盘/图片/待处理");
-        ChunTuGrab.grabTuwenPhoto(1);
+        HuabanGrab.grabPetOldPhoto(Const.huaBanPetLastPinId, 5);
     }
 
     public static void getFileCheckSum(String path) throws NoSuchAlgorithmException, IOException {
@@ -60,6 +62,4 @@ public class ImageGrab {
             }
         }
     }
-
-
 }

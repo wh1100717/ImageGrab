@@ -4,7 +4,10 @@
  */
 package com.imageGrab.utils;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,6 +15,7 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.NoSuchAlgorithmException;
+import javax.imageio.ImageIO;
 import jonelo.jacksum.JacksumAPI;
 import jonelo.jacksum.algorithm.AbstractChecksum;
 
@@ -21,9 +25,9 @@ import jonelo.jacksum.algorithm.AbstractChecksum;
  */
 public class FileUtil {
 
-    
     /**
      * 移动文件
+     *
      * @param srcFile 源文件
      * @param destPath 目标文件夹路径
      * @return
@@ -38,6 +42,7 @@ public class FileUtil {
 
     /**
      * 移动文件
+     *
      * @param srcFilePath 源文件路径
      * @param destPath 目标文件夹路径
      * @return
@@ -49,6 +54,7 @@ public class FileUtil {
 
     /**
      * 计算文件的Checksum 校验值
+     *
      * @param file 文件对象
      * @return
      * @throws NoSuchAlgorithmException
@@ -61,6 +67,7 @@ public class FileUtil {
 
     /**
      * 计算文件的Checksum 校验值
+     *
      * @param filePath 文件所在路径
      * @return
      * @throws NoSuchAlgorithmException
@@ -76,6 +83,7 @@ public class FileUtil {
 
     /**
      * 根据URL路径来下载文件到指定位置
+     *
      * @param urlString 文件的URL连接地址
      * @param filePath 指定路径
      * @throws Exception
@@ -104,4 +112,94 @@ public class FileUtil {
         is.close();
     }
 
+    /**
+     * 查看图片的宽度是否小于widthLimit，如果小于则返回false，如果大于则返回true
+     *
+     * @param filePath 图片所在路径
+     * @param widthLimit 比较图片宽度的值
+     * @return true表示图片宽度大于阀值，false表示图片宽度小于阀值
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
+    public static boolean checkWidthLimit(String filePath, int widthLimit) throws IOException {
+        File file = new File(filePath);
+        InputStream is = new FileInputStream(file.getAbsolutePath());
+        BufferedImage buff = ImageIO.read(is);
+
+        System.out.println(buff.getWidth());// 得到图片的宽度
+        int width = buff.getWidth();
+        is.close(); // 关闭Stream
+        if (width < widthLimit) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * 查看图片的宽度是否小于heightLimit，如果小于则返回false，如果大于则返回true
+     *
+     * @param filePath 图片所在路径
+     * @param heightLimit 比较图片高度的值
+     * @return true表示图片高度大于阀值，false表示图片高度小于阀值
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
+    public static boolean checkHeightLimit(String filePath, int heightLimit) throws IOException {
+        File file = new File(filePath);
+        InputStream is = new FileInputStream(file.getAbsolutePath());
+        BufferedImage buff = ImageIO.read(is);
+
+        System.out.println(buff.getWidth());// 得到图片的高度
+        int height = buff.getHeight();
+        is.close(); // 关闭Stream
+        if (height < heightLimit) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * 检查图片是否为正方形
+     *
+     * @param filePath 图片所在路径
+     * @return true表示该图片是正方形，false表示该图片不是正方形
+     * @throws IOException
+     */
+    public static boolean checkSquareImage(String filePath) throws IOException {
+        File file = new File(filePath);
+        InputStream is = new FileInputStream(file.getAbsolutePath());
+        BufferedImage buff = ImageIO.read(is);
+        if (buff.getWidth() == buff.getHeight()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 检查图片是否是近似正方形
+     *
+     * @param filePath 图片所在路径
+     * @param nearlyValue 近似程度值
+     * @return true表示该图片是近似正方形，false表示该图片不是近似正方形
+     * @throws IOException
+     */
+    public static boolean checkNearlySquareImage(String filePath, float nearlyValue) throws IOException {
+        File file = new File(filePath);
+        InputStream is = new FileInputStream(file.getAbsolutePath());
+        BufferedImage buff = ImageIO.read(is);
+        float width = buff.getWidth();
+        float height = buff.getHeight();
+        float s = 0;
+        if (width == 0 || height == 0) {
+            return false;
+        }
+        if (height / width < 1 + nearlyValue && width / height < 1 + nearlyValue) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
