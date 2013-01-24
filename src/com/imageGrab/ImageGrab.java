@@ -5,6 +5,7 @@
 package com.imageGrab;
 
 import com.imageGrab.common.Const;
+import com.imageGrab.controller.ImageFilter;
 import com.imageGrab.grab.ChunTuGrab;
 import com.imageGrab.grab.DuiTangGrab;
 import com.imageGrab.grab.HuabanGrab;
@@ -33,7 +34,17 @@ public class ImageGrab {
         // TODO code application logic here
 //        getFileCheckSum("F:/360云盘/图片/分类");
 //        getFileCheckSum("F:/360云盘/图片/待处理");
-        HuabanGrab.grabPetOldPhoto(Const.huaBanPetLastPinId, 5);
+//        HuabanGrab.grabPetOldPhoto(Const.huaBanPetLastPinId, 5);
+//        ImageFilter.widthFilter("D:/猫猫在睡觉/111/新建文件夹/动漫", 400);
+//        ImageFilter.widthFilter("D:/猫猫在睡觉/111/新建文件夹/动漫1", 400);
+//        ImageFilter.widthFilter("D:/猫猫在睡觉/111/新建文件夹/动漫2", 400);
+//        ImageFilter.widthFilter("D:/猫猫在睡觉/111/新建文件夹/动漫3", 400);
+//        ImageFilter.widthFilter("D:/猫猫在睡觉/111/新建文件夹/搞笑", 400);
+//        ImageFilter.widthFilter("D:/猫猫在睡觉/111/新建文件夹/美女", 400);
+//        ImageFilter.widthFilter("D:/猫猫在睡觉/111/新建文件夹/萌图", 400);
+//        ImageFilter.widthFilter("D:/猫猫在睡觉/111/新建文件夹/萌图1", 400);
+//        ImageFilter.widthFilter("D:/猫猫在睡觉/111/新建文件夹/童趣", 400);
+        getFileCheckSum("D:/猫猫在睡觉/111/新建文件夹");
     }
 
     public static void getFileCheckSum(String path) throws NoSuchAlgorithmException, IOException {

@@ -4,6 +4,8 @@
  */
 package com.imageGrab.utils;
 
+import com.sun.media.jai.codec.SeekableStream;
+import java.awt.color.CMMException;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,6 +18,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.security.NoSuchAlgorithmException;
 import javax.imageio.ImageIO;
+import javax.media.jai.JAI;
 import jonelo.jacksum.JacksumAPI;
 import jonelo.jacksum.algorithm.AbstractChecksum;
 
@@ -35,6 +38,9 @@ public class FileUtil {
     public static boolean move(File srcFile, String destPath) {
         //目标位置所在文件夹
         File dir = new File(destPath);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
         //更名
         boolean success = srcFile.renameTo(new File(dir, srcFile.getName()));
         return success;
@@ -123,8 +129,14 @@ public class FileUtil {
      */
     public static boolean checkWidthLimit(String filePath, int widthLimit) throws IOException {
         File file = new File(filePath);
-        InputStream is = new FileInputStream(file.getAbsolutePath());
-        BufferedImage buff = ImageIO.read(is);
+        InputStream is = new FileInputStream(file);
+        BufferedImage buff;
+        try {
+            // We try it with ImageIO
+            buff = ImageIO.read(file);
+        } catch (CMMException ex) {
+            buff = JAI.create("stream", SeekableStream.wrapInputStream(is, true)).getAsBufferedImage();
+        }
 
         System.out.println(buff.getWidth());// 得到图片的宽度
         int width = buff.getWidth();
@@ -148,7 +160,13 @@ public class FileUtil {
     public static boolean checkHeightLimit(String filePath, int heightLimit) throws IOException {
         File file = new File(filePath);
         InputStream is = new FileInputStream(file.getAbsolutePath());
-        BufferedImage buff = ImageIO.read(is);
+        BufferedImage buff;
+        try {
+            // We try it with ImageIO
+            buff = ImageIO.read(file);
+        } catch (CMMException ex) {
+            buff = JAI.create("stream", SeekableStream.wrapInputStream(is, true)).getAsBufferedImage();
+        }
 
         System.out.println(buff.getWidth());// 得到图片的高度
         int height = buff.getHeight();
@@ -170,7 +188,13 @@ public class FileUtil {
     public static boolean checkSquareImage(String filePath) throws IOException {
         File file = new File(filePath);
         InputStream is = new FileInputStream(file.getAbsolutePath());
-        BufferedImage buff = ImageIO.read(is);
+        BufferedImage buff;
+        try {
+            // We try it with ImageIO
+            buff = ImageIO.read(file);
+        } catch (CMMException ex) {
+            buff = JAI.create("stream", SeekableStream.wrapInputStream(is, true)).getAsBufferedImage();
+        }
         if (buff.getWidth() == buff.getHeight()) {
             return true;
         } else {
@@ -189,7 +213,13 @@ public class FileUtil {
     public static boolean checkNearlySquareImage(String filePath, float nearlyValue) throws IOException {
         File file = new File(filePath);
         InputStream is = new FileInputStream(file.getAbsolutePath());
-        BufferedImage buff = ImageIO.read(is);
+        BufferedImage buff;
+        try {
+            // We try it with ImageIO
+            buff = ImageIO.read(file);
+        } catch (CMMException ex) {
+            buff = JAI.create("stream", SeekableStream.wrapInputStream(is, true)).getAsBufferedImage();
+        }
         float width = buff.getWidth();
         float height = buff.getHeight();
         float s = 0;
