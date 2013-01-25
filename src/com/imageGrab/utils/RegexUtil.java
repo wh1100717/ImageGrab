@@ -16,8 +16,11 @@ public class RegexUtil {
     public static final String s91MeiTuRegex = "(filename\":\"[^,]*.(gif|jpg))";
     public static final String huaBanRegex = "(key\":\"[^\"]*)";
     public static final String renRenRegex = "(key\":\"[^\"]*)";
-    public static final String chunTuMeiziRegex = "data-original=\"([^\"]*)\"";
-    public static final String chunTuMeinvRegex = "<img src=\"([^\"]*)\"";
-    public static final String chunTuTaotuRegex = "<h3 class=\"feed-title\"><a target=\"_blank\" href=\"([^\"]*)\"";
+    
+    public static final String chunTuMeiziRegex = "<a class=\"favorite\" data-id=\"(.*?)\".*?发表于 ([^/]*)</div>.*?data-original=\"(.*?)\"";
+    public static final String chunTuMeinvRegex = "<div class=\"i_w_f\" id=\"(.*?)\">.*?<img src=\"(.*?)\".*? <span class=\"t\">(.*?)</span>";
+    public static final String chunTuTaotuRegex = "<h3 class=\"feed-title\"><a target=\"_blank\" href=\"http://www.chuntu.cc/topic/(.*?)\"";
+    
+//    public static final String chunTuTaotuRegex = "<h3 class=\"feed-title\"><a target=\"_blank\" href=\"([^\"]*)\"";
     public static final String chunTuContentRegex = "alt=\"([^\"]*)\"";
 }

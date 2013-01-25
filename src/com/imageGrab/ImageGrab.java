@@ -16,6 +16,7 @@ import com.imageGrab.utils.JsonUtil;
 import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +31,7 @@ public class ImageGrab {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws NoSuchAlgorithmException, IOException {
+    public static void main(String[] args) throws NoSuchAlgorithmException, IOException, ParseException {
         // TODO code application logic here
 //        getFileCheckSum("F:/360云盘/图片/分类");
 //        getFileCheckSum("F:/360云盘/图片/待处理");
@@ -44,7 +45,8 @@ public class ImageGrab {
 //        ImageFilter.widthFilter("D:/猫猫在睡觉/111/新建文件夹/萌图", 400);
 //        ImageFilter.widthFilter("D:/猫猫在睡觉/111/新建文件夹/萌图1", 400);
 //        ImageFilter.widthFilter("D:/猫猫在睡觉/111/新建文件夹/童趣", 400);
-        getFileCheckSum("D:/猫猫在睡觉/111/新建文件夹");
+//        getFileCheckSum("D:/猫猫在睡觉/111/新建文件夹");
+        ChunTuGrab.grabTuwenPhoto(2);
     }
 
     public static void getFileCheckSum(String path) throws NoSuchAlgorithmException, IOException {

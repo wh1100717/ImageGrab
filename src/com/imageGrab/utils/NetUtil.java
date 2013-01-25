@@ -9,8 +9,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.PostMethod;
 
 /**
  *
@@ -62,9 +68,37 @@ public class NetUtil {
         }
         getMethod.setRequestHeader("X-Requested-With", "XMLHttpRequest");
         getMethod.setRequestHeader("DK_AJAX_REQUEST", "ajax-reqeust");
+        getMethod.setRequestHeader("Origin", "http://www.chuntu.cc");
         client.executeMethod(getMethod);
         String result = getMethod.getResponseBodyAsString();
         getMethod.releaseConnection();
+        return result;
+    }
+
+    public static String getPageSourceByHTTPClientPost(String pageUrl, String host, String referer, String userAgent, Map paras) throws IOException {
+        HttpClient client = new HttpClient();
+        if (host != null) {
+            client.getHostConfiguration().setHost(host, 80, "http");
+        }
+        PostMethod postMethod = new PostMethod(pageUrl);
+        if (paras != null) {
+            Set keySet = paras.keySet();
+            for (Iterator it = keySet.iterator(); it.hasNext();) {
+                String s = (String) it.next();
+                postMethod.addParameter(s,(String)paras.get(s));
+            }
+        }
+        if (referer != null) {
+            postMethod.setRequestHeader("Referer", referer);
+        }
+        if (userAgent != null) {
+            postMethod.setRequestHeader("User-Agent", userAgent);
+        }
+        postMethod.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        postMethod.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+        client.executeMethod(postMethod);
+        String result = postMethod.getResponseBodyAsString();
+        postMethod.releaseConnection();
         return result;
     }
 }

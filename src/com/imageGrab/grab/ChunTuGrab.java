@@ -8,6 +8,13 @@ import com.imageGrab.common.Const;
 import com.imageGrab.utils.NetUtil;
 import com.imageGrab.utils.RegexUtil;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,7 +24,9 @@ import java.util.regex.Pattern;
  */
 public class ChunTuGrab {
 
-    public static void grabMeiziPhoto(int pageNumber) throws IOException {
+    public static List<Map> grabMeiziPhoto(int pageNumber) throws IOException, ParseException {
+        List<Map> result = new ArrayList<Map>();
+        SimpleDateFormat dateConvert = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String pageUrl = Const.chunTuMeiziPageUrl + pageNumber;
         String pageContent = NetUtil.getPageSource(pageUrl);
 
@@ -25,71 +34,97 @@ public class ChunTuGrab {
         Matcher matcher = pattern.matcher(pageContent);
         int counter = 1;
         while (matcher.find()) {
-            String imgUrl = matcher.group(1);
-            System.out.println("第" + counter + "张：");
-            System.out.println(imgUrl);
+            Map photo = new HashMap();
+            photo.put("id", matcher.group(1));
+            photo.put("date", dateConvert.parse(matcher.group(2)));
+            photo.put("imgUrl", matcher.group(3));
+            result.add(photo);
+            System.out.println("" + counter + photo);
             counter++;
         }
+        return result;
     }
 
-    public static void grabMeinvPhoto(int pageNumber) throws IOException {
+    public static List<Map> grabMeinvPhoto(int pageNumber) throws IOException, ParseException {
+        List<Map> result = new ArrayList<Map>(0);
+        SimpleDateFormat dateConvert = new SimpleDateFormat("yyyy年MM月dd日");
+
         String pageUrl = Const.chunTuMeinvPageUrl + pageNumber;
+        String pageExtUrl = Const.chunTuMeinvExtPageUrl + pageNumber;
+        Map paras = new HashMap();
+        paras.put("p", "1");
+
         String pageContent = NetUtil.getPageSource(pageUrl);
+        pageContent += NetUtil.getPageSourceByHTTPClientPost(pageExtUrl, "www.chuntu.cc", pageUrl, null, paras);
+        pageContent = pageContent.replaceAll("(\r\n|\r|\n|\n\r)", "<br>");
 
         Pattern pattern = Pattern.compile(RegexUtil.chunTuMeinvRegex);
         Matcher matcher = pattern.matcher(pageContent);
         int counter = 1;
         while (matcher.find()) {
-            String imgUrl = matcher.group(1);
-            System.out.println("第" + counter + "张：");
-            System.out.println(imgUrl);
+            Map photo = new HashMap();
+            photo.put("id", matcher.group(1));
+            photo.put("imgUrl", matcher.group(2).replace("200", "600"));
+            photo.put("date", dateConvert.parse("2013年" + matcher.group(3)));
+            result.add(photo);
+            System.out.println("" + counter + photo);
             counter++;
         }
+        return result;
     }
 
-    public static void grabTaoTuPhoto(int pageNumber) throws IOException {
+    public static List<Map> grabTuwenPhoto(int pageNumber) throws IOException, ParseException {
+        List<Map> result = new ArrayList<Map>(0);
+        SimpleDateFormat dateConvert = new SimpleDateFormat("yyyy年MM月dd日");
+
+        String pageUrl = Const.chunTuTuwenPageUrl + pageNumber;
+        String pageExtUrl = Const.chunTuTuwenExtPageUrl + pageNumber;
+        Map paras = new HashMap();
+        paras.put("p", "1");
+
+        String pageContent = NetUtil.getPageSource(pageUrl);
+        pageContent += NetUtil.getPageSourceByHTTPClientPost(pageExtUrl, "www.chuntu.cc", pageUrl, null, paras);
+        pageContent = pageContent.replaceAll("(\r\n|\r|\n|\n\r)", "<br>");
+
+        Pattern pattern = Pattern.compile(RegexUtil.chunTuMeinvRegex);
+        Matcher matcher = pattern.matcher(pageContent);
+
+        int counter = 1;
+        while (matcher.find()) {
+            Map photo = new HashMap();
+            photo.put("id", matcher.group(1));
+            photo.put("imgUrl", matcher.group(2).replace("200", "600"));
+            photo.put("date", dateConvert.parse("2013年" + matcher.group(3)));
+            result.add(photo);
+            System.out.println("" + counter + photo);
+            counter++;
+        }
+        return result;
+    }
+
+    public static List grabTaoTuIds(int pageNumber) throws IOException {
         String pageUrl = Const.chunTuTaotuPageUrl + pageNumber;
         String pageContent = NetUtil.getPageSource(pageUrl);
         Pattern pattern = Pattern.compile(RegexUtil.chunTuTaotuRegex);
         Matcher matcher = pattern.matcher(pageContent);
-        int counter = 1;
+        List taotuIds = new ArrayList();
         while (matcher.find()) {
-            String taoTuUrl = matcher.group(1);
-            System.out.println("第" + counter + "套：");
-            System.out.println(taoTuUrl);
-
-            String photoContent = NetUtil.getPageSource(taoTuUrl);
-
-            Pattern photoPattern = Pattern.compile(RegexUtil.chunTuMeiziRegex);
-            Matcher photoMatcher = photoPattern.matcher(photoContent);
-            int counter2 = 1;
-            while (photoMatcher.find()) {
-                String imgUrl = photoMatcher.group(1);
-                System.out.println("第" + counter2 + "张：");
-                System.out.println(imgUrl);
-                counter2++;
-            }
-            counter++;
+            taotuIds.add(matcher.group(1));
         }
+        System.out.println(taotuIds);
+        return taotuIds;
     }
 
-    public static void grabTuwenPhoto(int pageNumber) throws IOException {
-        String pageUrl = Const.chunTuTuwenPageUrl + pageNumber;
+    public static List grabTaoTuPhotosById(String id) throws IOException {
+        List result = new ArrayList();
+        String pageUrl = Const.chunTuTaotuDetailPageUrl + id;
         String pageContent = NetUtil.getPageSource(pageUrl);
-        Pattern photoPattern = Pattern.compile(RegexUtil.chunTuMeinvRegex);
-        Pattern contentPattern = Pattern.compile(RegexUtil.chunTuContentRegex);
-        Matcher photoMatcher = photoPattern.matcher(pageContent);
-        Matcher contentMatcher = contentPattern.matcher(pageContent);
-        int counter = 1;
-        while (photoMatcher.find()) {
-            String imgUrl = photoMatcher.group(1);
-            String msg = "";
-            if (contentMatcher.find()) {
-                msg = contentMatcher.group(1);
-            }
-            System.out.println("第" + counter + "张：" + msg);
-            System.out.println(imgUrl);
-            counter++;
+        Pattern pattern = Pattern.compile("data-original=\"(.*?)\"");
+        Matcher matcher = pattern.matcher(pageContent);
+        while (matcher.find()) {
+            result.add(matcher.group(1));
         }
+        System.out.println(result);
+        return result;
     }
 }
