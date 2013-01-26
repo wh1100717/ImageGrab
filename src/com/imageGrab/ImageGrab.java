@@ -46,7 +46,7 @@ public class ImageGrab {
 //        ImageFilter.widthFilter("D:/猫猫在睡觉/111/新建文件夹/萌图1", 400);
 //        ImageFilter.widthFilter("D:/猫猫在睡觉/111/新建文件夹/童趣", 400);
 //        getFileCheckSum("D:/猫猫在睡觉/111/新建文件夹");
-        ChunTuGrab.grabTuwenPhoto(2);
+        ChunTuGrab.grabTuwenPhoto(1);
     }
 
     public static void getFileCheckSum(String path) throws NoSuchAlgorithmException, IOException {

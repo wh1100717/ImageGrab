@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,11 +34,11 @@ public class ChunTuGrab {
         int counter = 1;
         while (matcher.find()) {
             Map photo = new HashMap();
-            photo.put("id", matcher.group(1));
-            photo.put("date", dateConvert.parse(matcher.group(2)));
-            photo.put("imgUrl", matcher.group(3));
+            photo.put("description", matcher.group(1));
+            photo.put("id", matcher.group(2));
+            photo.put("date", dateConvert.parse(matcher.group(3)));
+            photo.put("imgUrl", matcher.group(4));
             result.add(photo);
-            System.out.println("" + counter + photo);
             counter++;
         }
         return result;
@@ -67,7 +66,6 @@ public class ChunTuGrab {
             photo.put("imgUrl", matcher.group(2).replace("200", "600"));
             photo.put("date", dateConvert.parse("2013年" + matcher.group(3)));
             result.add(photo);
-            System.out.println("" + counter + photo);
             counter++;
         }
         return result;
@@ -86,7 +84,7 @@ public class ChunTuGrab {
         pageContent += NetUtil.getPageSourceByHTTPClientPost(pageExtUrl, "www.chuntu.cc", pageUrl, null, paras);
         pageContent = pageContent.replaceAll("(\r\n|\r|\n|\n\r)", "<br>");
 
-        Pattern pattern = Pattern.compile(RegexUtil.chunTuMeinvRegex);
+        Pattern pattern = Pattern.compile(RegexUtil.chunTuTuwenRegex);
         Matcher matcher = pattern.matcher(pageContent);
 
         int counter = 1;
@@ -94,9 +92,9 @@ public class ChunTuGrab {
             Map photo = new HashMap();
             photo.put("id", matcher.group(1));
             photo.put("imgUrl", matcher.group(2).replace("200", "600"));
-            photo.put("date", dateConvert.parse("2013年" + matcher.group(3)));
+            photo.put("description", matcher.group(3));
+            photo.put("date", dateConvert.parse("2013年" + matcher.group(4)));
             result.add(photo);
-            System.out.println("" + counter + photo);
             counter++;
         }
         return result;
@@ -111,11 +109,10 @@ public class ChunTuGrab {
         while (matcher.find()) {
             taotuIds.add(matcher.group(1));
         }
-        System.out.println(taotuIds);
         return taotuIds;
     }
 
-    public static List grabTaoTuPhotosById(String id) throws IOException {
+    public static List<String> grabTaoTuPhotosById(int id) throws IOException {
         List result = new ArrayList();
         String pageUrl = Const.chunTuTaotuDetailPageUrl + id;
         String pageContent = NetUtil.getPageSource(pageUrl);
@@ -124,7 +121,6 @@ public class ChunTuGrab {
         while (matcher.find()) {
             result.add(matcher.group(1));
         }
-        System.out.println(result);
         return result;
     }
 }

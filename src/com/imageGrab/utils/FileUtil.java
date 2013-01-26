@@ -47,6 +47,73 @@ public class FileUtil {
     }
 
     /**
+     * 删除文件
+     *
+     * @param srcFile 要删除的文件
+     * @return
+     */
+    public static boolean deleteFile(File srcFile) {
+        if (srcFile.isDirectory()) {
+            return false;
+        }
+        if (!srcFile.exists()) {
+            return false;
+        }
+        srcFile.delete();
+        return true;
+    }
+
+    /**
+     * 删除文件
+     *
+     * @param srcFilePath 要删除的文件路径
+     * @return
+     */
+    public static boolean deleteFile(String srcFilePath) {
+        File srcFile = new File(srcFilePath);
+        return deleteFile(srcFile);
+    }
+
+    /**
+     * 删除目录
+     *
+     * @param directory 要删除的目录文件
+     * @return
+     */
+    public static boolean deleteDirectory(File directory) {
+        if (!directory.isDirectory()) {
+            return false;
+        }
+        if (!directory.exists()) {
+            return false;
+        }
+        File[] fileList = directory.listFiles();
+        for (int index = 0; index < fileList.length; index++) {
+            File file = fileList[index];
+            if (!file.exists()) {
+                continue;
+            }
+            if (file.isDirectory()) {
+                deleteDirectory(file);
+            } else {
+                file.delete();
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 删除目录
+     *
+     * @param directoryPath 要删除目录的路径
+     * @return
+     */
+    public static boolean deleteDirectory(String directoryPath) {
+        File directory = new File(directoryPath);
+        return deleteDirectory(directory);
+    }
+
+    /**
      * 移动文件
      *
      * @param srcFilePath 源文件路径
@@ -108,6 +175,7 @@ public class FileUtil {
         int len;
         // 输出的文件流
         File file = new File(filePath);
+        System.out.println(file.getAbsoluteFile());
         OutputStream os = new FileOutputStream(file);
         // 开始读取
         while ((len = is.read(bs)) != -1) {
@@ -129,18 +197,9 @@ public class FileUtil {
      */
     public static boolean checkWidthLimit(String filePath, int widthLimit) throws IOException {
         File file = new File(filePath);
-        InputStream is = new FileInputStream(file);
-        BufferedImage buff;
-        try {
-            // We try it with ImageIO
-            buff = ImageIO.read(file);
-        } catch (CMMException ex) {
-            buff = JAI.create("stream", SeekableStream.wrapInputStream(is, true)).getAsBufferedImage();
-        }
-
+        BufferedImage buff = FileUtil.getImageInfo(file);
         System.out.println(buff.getWidth());// 得到图片的宽度
         int width = buff.getWidth();
-        is.close(); // 关闭Stream
         if (width < widthLimit) {
             return false;
         } else {
@@ -159,18 +218,10 @@ public class FileUtil {
      */
     public static boolean checkHeightLimit(String filePath, int heightLimit) throws IOException {
         File file = new File(filePath);
-        InputStream is = new FileInputStream(file.getAbsolutePath());
-        BufferedImage buff;
-        try {
-            // We try it with ImageIO
-            buff = ImageIO.read(file);
-        } catch (CMMException ex) {
-            buff = JAI.create("stream", SeekableStream.wrapInputStream(is, true)).getAsBufferedImage();
-        }
+        BufferedImage buff = FileUtil.getImageInfo(file);
 
         System.out.println(buff.getWidth());// 得到图片的高度
         int height = buff.getHeight();
-        is.close(); // 关闭Stream
         if (height < heightLimit) {
             return false;
         } else {
@@ -187,14 +238,7 @@ public class FileUtil {
      */
     public static boolean checkSquareImage(String filePath) throws IOException {
         File file = new File(filePath);
-        InputStream is = new FileInputStream(file.getAbsolutePath());
-        BufferedImage buff;
-        try {
-            // We try it with ImageIO
-            buff = ImageIO.read(file);
-        } catch (CMMException ex) {
-            buff = JAI.create("stream", SeekableStream.wrapInputStream(is, true)).getAsBufferedImage();
-        }
+        BufferedImage buff = FileUtil.getImageInfo(file);
         if (buff.getWidth() == buff.getHeight()) {
             return true;
         } else {
@@ -212,14 +256,7 @@ public class FileUtil {
      */
     public static boolean checkNearlySquareImage(String filePath, float nearlyValue) throws IOException {
         File file = new File(filePath);
-        InputStream is = new FileInputStream(file.getAbsolutePath());
-        BufferedImage buff;
-        try {
-            // We try it with ImageIO
-            buff = ImageIO.read(file);
-        } catch (CMMException ex) {
-            buff = JAI.create("stream", SeekableStream.wrapInputStream(is, true)).getAsBufferedImage();
-        }
+        BufferedImage buff = FileUtil.getImageInfo(file);
         float width = buff.getWidth();
         float height = buff.getHeight();
         float s = 0;
@@ -231,5 +268,16 @@ public class FileUtil {
         } else {
             return false;
         }
+    }
+
+    public static BufferedImage getImageInfo(File image) throws IOException, IOException {
+        BufferedImage bufferedImage;
+        try {
+            bufferedImage = ImageIO.read(image);
+        } catch (CMMException ex) {
+            InputStream is = new FileInputStream(image);
+            bufferedImage = JAI.create("stream", SeekableStream.wrapInputStream(is, true)).getAsBufferedImage();
+        }
+        return bufferedImage;
     }
 }
